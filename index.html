@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .chat-container { max-width: 500px; margin: auto; padding: 10px; border: 1px solid #ccc; }
+        .message { margin: 10px 0; }
+        .user { color: blue; }
+        .bot { color: green; }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div id="chat"></div>
+        <input id="userInput" type="text" placeholder="Type a message" style="width: 100%; padding: 10px;" />
+        <button onclick="sendMessage()">Send</button>
+    </div>
+    <script>
+        async function sendMessage() {
+            const input = document.getElementById('userInput').value;
+            document.getElementById('chat').innerHTML += `<div class="message user">You: ${input}</div>`;
+            document.getElementById('userInput').value = '';
+
+            const response = await fetch('http://127.0.0.1:5000/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: input }),
+            });
+
+            const data = await response.json();
+            document.getElementById('chat').innerHTML += `<div class="message bot">Bot: ${data.response}</div>`;
+        }
+    </script>
+</body>
+</html>
